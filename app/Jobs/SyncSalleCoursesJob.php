@@ -33,7 +33,7 @@ class SyncSalleCoursesJob implements ShouldQueue
             return;
         }
 
-        $dateDebut = Carbon::create(2025, 2, 1);
+        $dateDebut = Carbon::now();
         $dateFin = $dateDebut->copy()->addMonth();
 
         Log::info("📘 Synchronisation de la salle : {$salle->libelle}");
