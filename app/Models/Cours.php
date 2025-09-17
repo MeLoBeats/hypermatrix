@@ -32,6 +32,6 @@ class Cours extends Model
 
     public function enseignants(): BelongsToMany
     {
-        return $this->BelongsToMany(Enseignant::class, "cours_enseignants");
+        return $this->BelongsToMany(Enseignant::class, "cours_enseignants")->withPivot('active');
     }
 }

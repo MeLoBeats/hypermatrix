@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\HyperplanningRestService;
+use App\Services\MatrixService;
 use Illuminate\Support\ServiceProvider;
 
 class ExternalApiProvider extends ServiceProvider
@@ -18,6 +19,9 @@ class ExternalApiProvider extends ServiceProvider
                 config('hyperplanning.pass'),
                 config('hyperplanning.base_url'),
             );
+        });
+        $this->app->singleton(MatrixService::class, function () {
+            return new MatrixService(config('matrix.base_url'));
         });
     }
 

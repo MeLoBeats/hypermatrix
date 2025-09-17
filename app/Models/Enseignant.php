@@ -24,7 +24,7 @@ class Enseignant extends Model
 
     public function cours(): BelongsToMany
     {
-        return $this->belongsToMany(Cours::class, "cours_enseignants");
+        return $this->belongsToMany(Cours::class, "cours_enseignants")->withPivot("active");
     }
 
     public function getSallesAttribute()
