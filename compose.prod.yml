@@ -5,7 +5,7 @@ services:
       dockerfile: docker/Dockerfile
     image: hypermatrix-app:prod
     env_file:
-      - .env.production
+      - .env
     environment:
       APP_ENV: production
       APP_DEBUG: "false"
@@ -34,7 +34,7 @@ services:
   db:
     image: mysql:8
     env_file:
-      - .env.production
+      - .env
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_DATABASE}
