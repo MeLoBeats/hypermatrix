@@ -6,9 +6,11 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        {{-- <link rel="icon" href="/favicon.ico" sizes="any">
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml"> --}}
+        <link rel="icon" href="https://www.univ-spn.fr/wp-content/uploads/2023/01/cropped-cropped-favicon_round-32x32.png" sizes="32x32">
+        <link rel="icon" href="https://www.univ-spn.fr/wp-content/uploads/2023/01/cropped-cropped-favicon_round-192x192.png" sizes="192x192">
+        <link rel="apple-touch-icon" href="https://www.univ-spn.fr/wp-content/uploads/2023/01/cropped-cropped-favicon_round-180x180.png">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />

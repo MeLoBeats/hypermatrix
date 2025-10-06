@@ -76,5 +76,12 @@
 | 📱 Appli mobile chef de service | Forcer une ouverture ponctuelle, vérifier les accès    |
 | 👩‍🏫 Portail enseignant           | Voir ses accès / historique / demander une extension   |
 
+tableau salles,
+tableau synchro
+
 Ajuster en ligne l'heure de lancement du script
 Ajouter la plage horaire nuit / jour
+
+
+Matrix rapprochement dorma -> hyperplanning
+Hyperplanning -> Matrix
