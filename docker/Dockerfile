@@ -68,8 +68,8 @@ RUN mkdir -p storage/logs storage/framework/{cache,sessions,views} bootstrap/cac
 COPY docker/entrypoint.prod.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-EXPOSE 80
-HEALTHCHECK --interval=30s --timeout=3s --retries=3 CMD curl -fsS http://localhost/ || exit 1
+EXPOSE 9000
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 CMD curl -fsS http://localhost:9000/ || exit 1
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["/opt/docker/bin/entrypoint.sh", "supervisord"]
