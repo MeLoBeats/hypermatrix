@@ -1,0 +1,9 @@
+bootstrap/cache/*.php
+storage/*.log
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+node_modules
+vendor
+.env*
+public/hot
