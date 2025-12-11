@@ -277,7 +277,7 @@ const Doors = () => {
                                         size="sm"
                                     >
                                         {salle.has_hp_match
-                                            ? "Trouvée"
+                                            ? salle.libelle_hp || "Trouvée"
                                             : "Manquante"}
                                     </Badge>
                                 </Table.Td>
