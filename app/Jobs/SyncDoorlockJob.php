@@ -18,6 +18,14 @@ class SyncDoorlockJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
+     * Crée une nouvelle instance du job.
+     */
+    public function __construct()
+    {
+        // Le service RoomSyncService sera injecté automatiquement
+    }
+
+    /**
      * Exécute le job de synchronisation.
      *
      * @param RoomSyncService $syncService

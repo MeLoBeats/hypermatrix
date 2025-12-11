@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use SimpleXMLElement;
 
@@ -32,18 +33,77 @@ class MatrixService
     }
 
     private function get(string $url)
-    {
-        $response = $this->client
-            ->withHeader('Accept', 'application/xml')
-            ->get($url);
+{
+    $maxRetries = 3;
+    $retryDelay = 1000000; // 1 seconde en microsecondes
 
-        if (!str_contains($response->header('Content-Type'), 'xml')) {
-            throw new \RuntimeException("Expected XML response, got: " . $response->header('Content-Type'));
+    for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
+        try {
+            // Délai exponentiel entre les tentatives
+            if ($attempt > 1) {
+                $delay = $retryDelay * $attempt; // Augmente le délai à chaque tentative
+                usleep($delay);
+            }
+
+            $response = $this->client
+                ->withHeader('Accept', 'application/xml')
+                ->get($url);
+
+            // Vérifier le code de statut HTTP
+            $status = $response->status();
+            if ($status === 429) { // Too Many Requests
+                $retryAfter = $response->header('Retry-After', 5); // 5 secondes par défaut
+                sleep($retryAfter);
+                continue;
+            }
+
+            // Si on arrive ici, la requête a réussi
+            return $this->handleSuccessfulResponse($response, $url);
+
+        } catch (\Exception $e) {
+            if ($attempt === $maxRetries) {
+                Log::error('Échec après plusieurs tentatives', [
+                    'url' => $url,
+                    'attempt' => $attempt,
+                    'error' => $e->getMessage()
+                ]);
+                throw $e;
+            }
+            Log::warning("Tentative $attempt échouée, nouvelle tentative...", [
+                'url' => $url,
+                'error' => $e->getMessage()
+            ]);
         }
-
-        dump($response->body());
-        return simplexml_load_string($response->body())->asXML();
     }
+
+    throw new \RuntimeException("Échec après $maxRetries tentatives pour l'URL: $url");
+}
+
+private function handleSuccessfulResponse($response, $url)
+{
+    $contentType = $response->header('Content-Type');
+    $body = $response->body();
+
+    // Log de la réponse complète en mode debug uniquement
+    Log::debug('Réponse de l\'API Matrix', [
+        'url' => $url,
+        'status' => $response->status(),
+        'content_type' => $contentType
+    ]);
+
+    // Vérifier le type de contenu
+    if (!str_contains($contentType, 'xml')) {
+        throw new \RuntimeException("Réponse inattendue de type: {$contentType}");
+    }
+
+    // Essayer de parser le XML
+    $xml = simplexml_load_string($body);
+    if ($xml === false) {
+        throw new \RuntimeException("Impossible de parser la réponse XML");
+    }
+
+    return $xml->asXML();
+}
 
     private function put(string $url, string $data)
     {
@@ -106,5 +166,15 @@ class MatrixService
         return $body;
         file_put_contents(storage_path("logs/matrix-check.xml"), $body);
         return $this->put("person/{$matricule}/accesspermissions", $body);
+    }
+
+    function getDoors(?int $id = null)
+    {
+        return $this->get("dooradministration/area/door/{$id}");
+    }
+
+    function getDoorName(int $id)
+    {
+        return $this->xmlToArrayFromString($this->getDoors($id))["Name"];
     }
 }

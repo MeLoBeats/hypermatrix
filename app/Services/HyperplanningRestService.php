@@ -45,7 +45,7 @@ class HyperplanningRestService
         if (!$rubriques && isset($response["code"]) && $response["code"] == 1) {
             return null;
         }
-        return Arr::pluck($response['rubriques'] ?? [], 'cle');
+        return Arr::pluck($response['rubriques'] ?? [], 'nom');
     }
 
     public function getCoursesByRoomBetweenDates(int|string $roomId, string $fromDate, string $toDate)

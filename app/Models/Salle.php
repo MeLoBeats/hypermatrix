@@ -15,13 +15,15 @@ class Salle extends Model
     protected $fillable = [
         "hp_id",
         "dorma",
-        "libelle"
+        "libelle_hp",
+        "libelles_matrix"
     ];
 
     public function casts(): array
     {
         return [
-            "dorma" => "array"
+            "dorma" => "array",
+            "libelles_matrix" => "array"
         ];
     }
 

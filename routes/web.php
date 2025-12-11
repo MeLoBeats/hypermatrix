@@ -46,7 +46,7 @@ Route::get('/salles', function () {
 
     $sallesQuery = \App\Models\Salle::query()
         ->withCount('cours')
-        ->select(['id', 'hp_id', 'libelle', 'dorma']);
+        ->select(['id', 'hp_id', 'libelle_hp as libelle', 'dorma', 'libelles_matrix']);
 
     // Add enseignants_count via subquery on pivot cours_enseignants
     $sallesQuery->addSelect(['enseignants_count' => \App\Models\Enseignant::query()
@@ -68,6 +68,19 @@ Route::get('/salles', function () {
 
     $salles = $sallesQuery->paginate()->appends(['q' => $search]);
 
+    // Ajouter la correspondance HP (has_hp_match) à chaque salle
+    $salles->getCollection()->transform(function ($salle) {
+        // Une salle a une correspondance HP si elle a un hp_id non nul
+        $salle->has_hp_match = !empty($salle->hp_id);
+        
+        // Si libelles_matrix est une chaîne, la convertir en tableau
+        if (is_string($salle->libelles_matrix)) {
+            $salle->libelles_matrix = json_decode($salle->libelles_matrix, true) ?? [];
+        }
+        
+        return $salle;
+    });
+
     return Inertia::render('Doors', [
         'salles' => $salles,
         'filters' => [
@@ -81,7 +94,7 @@ Route::get('/cours', function () {
 
     $coursQuery = \App\Models\Cours::query()
         ->with([
-            'salle:id,libelle,dorma',
+            'salle:id,libelle_hp,dorma',
             'enseignants:id,nom,prenom,matricule',
         ])
         ->select(['id', 'hp_id', 'salle_id', 'date'])
@@ -93,7 +106,7 @@ Route::get('/cours', function () {
 
         $coursQuery
             ->whereHas('salle', function ($q) use ($search, $like) {
-                $q->where('libelle', $like, "%{$search}%");
+                $q->where('libelle_hp', $like, "%{$search}%");
             })
             ->orWhereHas('enseignants', function ($q) use ($search, $like) {
                 $q->where('nom', $like, "%{$search}%")
@@ -165,6 +178,10 @@ Route::get('/test', function (MatrixService $ms, SyncMatrixPersonService $sms) {
     }
 });
 
-Route::get('/test/{id}', function (string $id, MatrixService $ms) {
+Route::get('/teste/{id}', function (string $id, MatrixService $ms) {
     return $ms->createAccessPermissionByMatricule($id, "7181", Carbon::now(), Carbon::now()->addMonth());
+});
+
+Route::get('/doors/{id}', function(int $id, MatrixService $ms) {
+    return $ms->xmlToArrayFromString($ms->getDoors($id))["Name"];
 });

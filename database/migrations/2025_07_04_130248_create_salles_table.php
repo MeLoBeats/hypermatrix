@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->integer('hp_id');
             $table->json('dorma');
-            $table->string('libelle');
+            $table->string('libelle_hp');
+            $table->json('libelles_matrix')->nullable();
             $table->timestamps();
         });
     }
