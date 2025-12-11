@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: laravel_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hypermatrix
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - laravel_net
+
+  redis:
+    image: redis:7
+    container_name: laravel_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - laravel_net
+
+volumes:
+  postgres_data:
+
+networks:
+  laravel_net:
