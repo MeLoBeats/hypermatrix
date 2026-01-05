@@ -8,7 +8,6 @@ services:
       APP_ENV: production
       APP_DEBUG: "false"
       APP_URL: ${APP_URL}
-      # Fournir une APP_KEY valide (base64...)
       APP_KEY: ${APP_KEY}
       # DB
       DB_CONNECTION: mysql
@@ -38,20 +37,66 @@ services:
       MATRIX_INTERFACE_NUMBER: ${MATRIX_INTERFACE_NUMBER}
       MATRIX_PASSWORD: ${MATRIX_PASSWORD}
       MATRIX_API_KEY: ${MATRIX_API_KEY}
-
       MATRIX_RETRY_ATTEMPTS: ${MATRIX_RETRY_ATTEMPTS}
       MATRIX_RETRY_DELAY_MS: ${MATRIX_RETRY_DELAY_MS}
-      # Activer si tu veux migrer en boot (déploiements contrôlés)
+      
       RUN_MIGRATIONS: "true"
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     ports:
       - "9001:9001"
-    # Pas de volumes de code en prod
-    # Optionnel: volume pour logs si tu veux les externaliser
-    # volumes:
-    #   - app_logs:/var/www/html/storage/logs
+
+  # Service Horizon dédié
+  horizon:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: hypermatrix-app:prod
+    command: php artisan horizon
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: ${APP_URL}
+      APP_KEY: ${APP_KEY}
+      # DB
+      DB_CONNECTION: mysql
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      HP_LOGIN: ${HP_LOGIN}
+      HP_PASS: ${HP_PASS}
+      HP_BASE_URL: ${HP_BASE_URL}
+
+      # HORIZON
+      HORIZON_DOMAIN: ${HORIZON_DOMAIN}
+      HORIZON_PATH: ${HORIZON_PATH}
+      HORIZON_PREFIX: ${HORIZON_PREFIX}
+
+      # REDIS
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+      # MATRIX
+      MATRIX_BASE: ${MATRIX_BASE}
+      MATRIX_MANDATORY_NUMBER: ${MATRIX_MANDATORY_NUMBER}
+      MATRIX_INTERFACE_NUMBER: ${MATRIX_INTERFACE_NUMBER}
+      MATRIX_PASSWORD: ${MATRIX_PASSWORD}
+      MATRIX_API_KEY: ${MATRIX_API_KEY}
+      MATRIX_RETRY_ATTEMPTS: ${MATRIX_RETRY_ATTEMPTS}
+      MATRIX_RETRY_DELAY_MS: ${MATRIX_RETRY_DELAY_MS}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
 
   redis:
     image: redis:7-alpine
