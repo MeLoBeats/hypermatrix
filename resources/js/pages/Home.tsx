@@ -70,6 +70,7 @@ const HomePage = () => {
           </div>
 
           {/* System Status */}
+          {/* 
           <Alert 
             icon={<Zap size={16} />} 
             title="Dernière synchronisation" 
@@ -105,7 +106,7 @@ const HomePage = () => {
           </SimpleGrid>
 
           {/* Main Content Grid */}
-          <Grid>
+          <Grid hidden>
             {/* Sync Status */}
             <Grid.Col span={{ base: 12, md: 6 }}>
               <Card shadow="sm" padding="lg" radius="md" withBorder className="h-full">
