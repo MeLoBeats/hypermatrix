@@ -12,9 +12,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // Synchronisation des serrures chaque jour à 3h du matin
+        // Door locks sync daily at 03:00.
         $schedule->command('doorlock:sync')
                  ->dailyAt('3:00')
+                 ->withoutOverlapping()
+                 ->onOneServer();
+
+        // Hyperplanning course sync twice daily.
+        $schedule->command('hyperplanning:sync')
+                 ->twiceDaily(6, 18)
                  ->withoutOverlapping()
                  ->onOneServer();
     }

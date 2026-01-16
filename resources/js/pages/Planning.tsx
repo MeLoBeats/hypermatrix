@@ -79,7 +79,12 @@ const Planning = () => {
             </div>
             <Group>
               <Tooltip label="Forcer la synchronisation">
-                <ActionIcon size="lg" variant="light" color="blue">
+                <ActionIcon
+                  size="lg"
+                  variant="light"
+                  color="blue"
+                  onClick={() => router.post('/cours/sync', {}, { preserveScroll: true })}
+                >
                   <RefreshCw size={18} />
                 </ActionIcon>
               </Tooltip>

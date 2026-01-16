@@ -17,6 +17,11 @@ class SyncHyperplanningCourseJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public function tags(): array
+    {
+        return ['hyperplanning', 'cours', 'sync'];
+    }
+
     public function handle(): void
     {
         $salles = Salle::all();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SyncHyperplanningCourseJob;
 use App\Models\Cours;
 use Inertia\Inertia;
 
@@ -45,5 +46,12 @@ class CoursController extends Controller
                 'q' => $search,
             ],
         ]);
+    }
+
+    public function sync()
+    {
+        SyncHyperplanningCourseJob::dispatch();
+
+        return redirect()->back()->with('status', 'Sync queued');
     }
 }

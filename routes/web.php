@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/salles', [SalleController::class, 'index']);
 Route::get('/cours', [CoursController::class, 'index']);
+Route::post('/cours/sync', [CoursController::class, 'sync']);
 Route::get('/logs', [LogController::class, 'index']);
 Route::get('/enseignants', [EnseignantController::class, 'index']);
 Route::get('/test', [MatrixDebugController::class, 'sync']);

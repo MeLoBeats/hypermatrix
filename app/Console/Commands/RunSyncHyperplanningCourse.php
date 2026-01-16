@@ -26,7 +26,7 @@ class RunSyncHyperplanningCourse extends Command
      */
     public function handle()
     {
-        SyncHyperplanningCourseJob::dispatchSync();
-        $this->info("Job executé");
+        SyncHyperplanningCourseJob::dispatch();
+        $this->info("Job dispatched");
     }
 }

@@ -24,6 +24,11 @@ class SyncSalleCoursesJob implements ShouldQueue
 
     public function __construct(private int $salleId) {}
 
+    public function tags(): array
+    {
+        return ['hyperplanning', 'cours', 'salle:' . $this->salleId];
+    }
+
     public function handle(HyperplanningRestService $hp): void
     {
         $salle = Salle::find($this->salleId);
