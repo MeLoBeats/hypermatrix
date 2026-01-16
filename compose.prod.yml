@@ -48,7 +48,7 @@ services:
       redis:
         condition: service_healthy
     ports:
-      - "9001:9001"
+      - "${APP_PORT:-9001}:9001"
 
   # Service Horizon dédié
   horizon:
